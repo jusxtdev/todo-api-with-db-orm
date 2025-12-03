@@ -41,3 +41,18 @@ def delete_task(task_id : int, db : Session = Depends(get_db)):
     db.delete(requested_task)
     db.commit()
     return requested_task
+
+@router.put('/{task_id}', response_model=TaskResponse, status_code=status.HTTP_202_ACCEPTED)
+def update_task(task_id : int, task_data :TaskUpdate, db : Session = Depends(get_db)):
+    existing_data = db.query(Task).where(Task.task_id == task_id).first()
+
+    raise_error_404(existing_data, task_id)
+
+    update_data = task_data.model_dump(exclude_unset=True)
+
+    for key, value in update_data.items():
+        setattr(existing_data, key, value)
+
+    db.commit()
+    db.refresh(existing_data)
+    return existing_data
