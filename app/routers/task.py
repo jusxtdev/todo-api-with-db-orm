@@ -31,3 +31,13 @@ def add_task(new_task_data : TaskCreate, db : Session = Depends(get_db)):
     db.commit()
     db.refresh(new_task)
     return new_task
+
+@router.delete('/{task_id}', response_model=TaskResponse, status_code=status.HTTP_200_OK)
+def delete_task(task_id : int, db : Session = Depends(get_db)):
+    requested_task = db.query(Task).where(Task.task_id == task_id).first()
+
+    raise_error_404(requested_task, requested_id=task_id)
+
+    db.delete(requested_task)
+    db.commit()
+    return requested_task
