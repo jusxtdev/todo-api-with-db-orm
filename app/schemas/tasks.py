@@ -17,7 +17,5 @@ class TaskResponse(BaseModel):
     is_done : bool
     due_date : date
     create_at : datetime
-    update_at : datetime
-
-    class Config:
-        from_attributes = True
+    update_at : datetime | None = None
+    model_config = {"from_attributes": True}

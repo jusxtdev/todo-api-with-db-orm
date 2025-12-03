@@ -23,3 +23,11 @@ def task_by_id(task_id : int, db : Session = Depends(get_db)):
     raise_error_404(requested_task, task_id)
 
     return requested_task
+
+@router.post('/', response_model=TaskResponse, status_code=status.HTTP_201_CREATED)
+def add_task(new_task_data : TaskCreate, db : Session = Depends(get_db)):
+    new_task = Task(title = new_task_data.title, due_date = new_task_data.due_date)
+    db.add(new_task)
+    db.commit()
+    db.refresh(new_task)
+    return new_task

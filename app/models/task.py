@@ -12,4 +12,4 @@ class Task(Base):
     due_date = Column(Date)
 
     create_at = Column(DateTime, default=func.now())
-    update_at = Column(DateTime, onupdate=func.now())
+    update_at = Column(DateTime, default=func.now(), onupdate=func.now())
