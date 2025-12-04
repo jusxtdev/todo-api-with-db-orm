@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, func, Date
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, func, Date, ForeignKey
+from sqlalchemy.orm import relationship
 
 from app.database import Base
 
@@ -13,3 +14,7 @@ class Task(Base):
 
     create_at = Column(DateTime, default=func.now())
     update_at = Column(DateTime, default=func.now(), onupdate=func.now())
+
+    user_id = Column(Integer, ForeignKey('users.id'))
+
+    user = relationship("User", back_populates='tasks')
