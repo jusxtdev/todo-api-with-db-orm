@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
+from datetime import datetime
 
 from app.database import get_db
 from app.models.task import Task
@@ -52,6 +53,8 @@ def update_task(task_id : int, task_data :TaskUpdate, db : Session = Depends(get
 
     for key, value in update_data.items():
         setattr(existing_data, key, value)
+
+    existing_data.update_at = datetime.now().replace(microsecond=0)
 
     db.commit()
     db.refresh(existing_data)
